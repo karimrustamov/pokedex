@@ -20,19 +20,24 @@ async function loadPokemon() {
 }
 
 function renderPokemonInfo() {
-    // Create a new card for each Pokemon
     let card = document.createElement('div');
     card.className = 'pokemonCard';
 
     let name = currentPokemon['name'];
     let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
-    
+
+    let typesContent = '';
+    currentPokemon['types'].forEach(type => {
+        typesContent += `<div>${type['type']['name']}</div>`;
+    });
+
     card.innerHTML = `
-        <h1>${capitalizedName}</h1>
+        <h2>${capitalizedName}</h2>
         <img src="${currentPokemon['sprites']['front_default']}" alt="${capitalizedName}">
         <div>#${currentPokemon['id']}</div>
-        <div>${currentPokemon['types'].map(type => type['type']['name']).join(', ')}</div>
+        ${typesContent}
     `;
 
     document.getElementById('allCards').appendChild(card);
 }
+
