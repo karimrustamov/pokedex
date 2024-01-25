@@ -4,15 +4,26 @@ body {
     background-color: lightgray !important;
 }
 
-
 .pokemonCard {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
     width: 200px;
+    height: 150px;
     background-color: white;
     border-radius: 20px;
+    position: relative;
+    padding-left: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Leichter Schatten für Tiefe */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Für sanfte Übergänge */
+    cursor: pointer; /* Cursor wird zum Pointer */
+    color: white;
+}
+
+.pokemonCard:hover {
+    transform: scale(1.05); /* Leicht vergrößern beim Hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Stärkerer Schatten für Hervorhebung */
 }
 
 header {
@@ -22,7 +33,7 @@ header {
     align-items: center;
     background-color: white;
     padding: 8px;
-    box-shadow: 0 -6px 10px 5px rgba(0,0,0,0.5);
+    box-shadow: 0 -6px 10px 5px rgba(0, 0, 0, 0.5);
 }
 
 #allCards {
@@ -34,6 +45,53 @@ header {
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
+}
 
+.pokemonType {
+    background-color: grey;
+    border-radius: 10px;
+    padding: 2px 8px;
+    margin-bottom: 4px;
+}
+
+.pokemonCard img {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100px;
+    height: auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loadingPokeball {
+    animation: spin 2s linear infinite;
+    display: block;
+    margin: 5px auto;
+    width: 50px; /* Passen Sie die Größe nach Bedarf an */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes glow {
+    0% { filter: brightness(1) contrast(1); }
+    50% { filter: brightness(2) contrast(1.5); }
+    100% { filter: brightness(1) contrast(1); }
+}
+
+
+#loadingPokeball.finish {
+    animation: glow 0.5s ease-out, pulse 0.5s ease-out;
+}
+
+#logoPokedex{
+    height: 80px;
 }
 
