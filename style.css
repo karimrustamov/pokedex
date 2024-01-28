@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: 'Open Sans', sans-serif;
-    background-color: lightgray !important;
+
 }
 
 .pokemonCard {
@@ -15,15 +15,20 @@ body {
     border-radius: 20px;
     position: relative;
     padding-left: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Leichter Schatten für Tiefe */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Für sanfte Übergänge */
-    cursor: pointer; /* Cursor wird zum Pointer */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Leichter Schatten für Tiefe */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Für sanfte Übergänge */
+    cursor: pointer;
+    /* Cursor wird zum Pointer */
     color: white;
 }
 
 .pokemonCard:hover {
-    transform: scale(1.05); /* Leicht vergrößern beim Hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Stärkerer Schatten für Hervorhebung */
+    transform: scale(1.05);
+    /* Leicht vergrößern beim Hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    /* Stärkerer Schatten für Hervorhebung */
 }
 
 header {
@@ -63,27 +68,49 @@ header {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 #loadingPokeball {
     animation: spin 2s linear infinite;
     display: block;
     margin: 5px auto;
-    width: 50px; /* Passen Sie die Größe nach Bedarf an */
+    width: 50px;
+    /* Passen Sie die Größe nach Bedarf an */
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 @keyframes glow {
-    0% { filter: brightness(1) contrast(1); }
-    50% { filter: brightness(2) contrast(1.5); }
-    100% { filter: brightness(1) contrast(1); }
+    0% {
+        filter: brightness(1) contrast(1);
+    }
+
+    50% {
+        filter: brightness(2) contrast(1.5);
+    }
+
+    100% {
+        filter: brightness(1) contrast(1);
+    }
 }
 
 
@@ -91,7 +118,50 @@ header {
     animation: glow 0.5s ease-out, pulse 0.5s ease-out;
 }
 
-#logoPokedex{
+#logoPokedex {
     height: 80px;
 }
 
+.pokemonCard h2 {
+    margin-top: 10px;
+}
+
+.allTypes {
+    height: 64px;
+}
+
+.display-none {
+    display: none;
+}
+
+#furtherInformation {
+    position: relative;
+    background-color: grey;
+    border-radius: 24px;
+    padding: 20px; /* Hinzugefügt für etwas Innenabstand */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Schatten für das Popup */
+    z-index: 101; /* Höherer z-index als der des PopUp-Hintergrunds */
+    /* Sie können hier die Größe anpassen, z. B. width: 50%; */
+}
+
+.popUp {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: none; /* Standardmäßig ist das Popup nicht sichtbar */
+    z-index: 100;
+}
+
+/* Stellen Sie sicher, dass der Körper scrollbar bleibt */
+body {
+    overflow-y: auto;
+}
+
+.popUpActive {
+    display: flex; /* Zeigt das Popup an */
+    background-color: rgba(0, 0, 0, 0.5); /* Halbtransparente Verdunkelung */
+}

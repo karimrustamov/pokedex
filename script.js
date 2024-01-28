@@ -1,6 +1,8 @@
 let currentPokemon;
 let pokemonID = 1;
 const totalPokemon = 151;
+let allPokemons = {};
+
 
 async function init() {
     for (pokemonID = 1; pokemonID <= totalPokemon; pokemonID++) {
@@ -13,12 +15,18 @@ async function loadPokemon() {
     try {
         let url = 'https://pokeapi.co/api/v2/pokemon/' + pokemonID;
         let response = await fetch(url);
-        currentPokemon = await response.json();
+        let pokemonData = await response.json();
+
+        // Speichern des Pokémon in allPokemons
+        allPokemons[pokemonData.id] = pokemonData;
+
+        currentPokemon = pokemonData; // Behalten Sie diese Zeile bei, falls Sie sie anderweitig verwenden
         renderPokemonInfo();
     } catch (error) {
         console.error('Error loading Pokemon:', error);
     }
 }
+
 
 function stopLoadingAnimation() {
     const loadingPokeball = document.getElementById('loadingPokeball');
@@ -28,6 +36,8 @@ function stopLoadingAnimation() {
 function renderPokemonInfo() {
     let card = document.createElement('div');
     card.className = 'pokemonCard';
+    card.setAttribute('data-pokemon-id', currentPokemon.id);
+    card.addEventListener('click', onCardClick);
 
     let name = currentPokemon['name'];
     let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
@@ -47,7 +57,7 @@ function renderPokemonInfo() {
         <h2>${capitalizedName}</h2>
         <div>#${currentPokemon['id']}</div>
         <img src="${currentPokemon['sprites']['front_default']}" alt="${capitalizedName}">
-        ${typesContent}
+        <div class="allTypes">${typesContent}</div>
     `;
 
     document.getElementById('allCards').appendChild(card);
@@ -77,3 +87,31 @@ function getColorByType(type) {
 
     return typeColors[type.toLowerCase()] || { light: '#A8A878', dark: '#6D6D4E' }; // Standardfarben
 }
+
+function onCardClick(event) {
+    // Holen Sie die Pokémon-ID aus dem Datenattribut des angeklickten Elements
+    const pokemonId = event.currentTarget.getAttribute('data-pokemon-id');
+
+    // Greifen Sie auf das entsprechende Pokémon-Objekt aus dem globalen Speicher zu
+    const pokemon = allPokemons[pokemonId];
+
+    // Entfernen Sie die Klasse 'display-none', um das Element sichtbar zu machen
+    const infoElement = document.getElementById('furtherInformation');
+    infoElement.classList.remove("display-none");
+
+    // Setzen des Inhalts des Info-Elements mit dem Namen des Pokémons
+    infoElement.innerHTML = `
+        <h1>${pokemon.name}</h1>
+        <img src="${pokemon.sprites.front_default}">
+        <div>${pokemon.stats[0].stat.name}
+        <div>${pokemon.stats[0].base_stat}
+    `;
+
+    // Hier können Sie nun die gewünschten Informationen des Pokémon im Console-Log anzeigen
+    console.log('Geklicktes Pokémon:', currentPokemon);
+
+    // Zeigt das Popup an
+    const popupElement = document.querySelector('.popUp');
+    popupElement.classList.add('popUpActive');
+}
+
