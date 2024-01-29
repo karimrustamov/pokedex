@@ -131,7 +131,7 @@ header {
 }
 
 .display-none {
-    display: none;
+    display: none !important;
 }
 
 #furtherInformation {
@@ -144,24 +144,23 @@ header {
     /* Sie können hier die Größe anpassen, z. B. width: 50%; */
 }
 
-.popUp {
+#popUp {
     position: fixed;
+    /* Geändert von absolute zu fixed */
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
+    display: flex;
     justify-content: center;
     align-items: center;
-    display: none; /* Standardmäßig ist das Popup nicht sichtbar */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Halbtransparente Verdunkelung */
     z-index: 100;
+    /* Stellt sicher, dass das Popup über anderen Elementen liegt */
 }
 
 /* Stellen Sie sicher, dass der Körper scrollbar bleibt */
 body {
     overflow-y: auto;
-}
-
-.popUpActive {
-    display: flex; /* Zeigt das Popup an */
-    background-color: rgba(0, 0, 0, 0.5); /* Halbtransparente Verdunkelung */
 }
