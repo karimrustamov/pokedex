@@ -62,7 +62,7 @@ function renderPokemonInfo() {
     card.innerHTML = `
         <h2>${capitalizedName}</h2>
         <div>#${currentPokemon['id']}</div>
-        <img src="${currentPokemon['sprites']['front_default']}" alt="${capitalizedName}">
+        <img src="${currentPokemon['sprites']['other']['dream_world']['front_default']}" alt="${capitalizedName}">
         <div class="allTypes">${typesContent}</div>
     `;
 
@@ -134,18 +134,21 @@ function onCardClick(event) {
     // Verbindet die Elemente des Arrays zu einem String, getrennt durch ", ".
     abilitiesContent = abilities.join(', ');
 
+    let pokemonHeight = pokemon.height / 10;
+
+    let pokemonWeight = pokemon.weight / 10;
 
     // Setzen des Inhalts des Info-Elements mit dem Namen des Pokémons
     infoElement.innerHTML = `
         <button onclick="closePopUp()" type="button" class="btn-close" aria-label="Close"></button>
         <h1>${capitalizedTypeName}</h1>
-        <img src="${pokemon.sprites.front_default}">
-        <div>${pokemon.stats[0].stat.name}</div>
-        <div>${pokemon.stats[0].base_stat}</div>
+        <img class="infoElementImg" src="${pokemon['sprites']['other']['dream_world']['front_default']}">
         <div>${typesContent}</div>
         <div>#${pokemon.id}</div>
         <div>Base Experience: ${pokemon.base_experience}</div>
         <div>Abilities: ${abilitiesContent}</div>
+        <div>Height: ${pokemonHeight} m</div>
+        <div>Height: ${pokemonWeight} kg</div>
     `;
 
     // Hier können Sie nun die gewünschten Informationen des Pokémon im Console-Log anzeigen

@@ -9,13 +9,14 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    width: 200px;
-    height: 150px;
+    width: 250px;
+    height: 200px;
     background-color: white;
     border-radius: 20px;
     position: relative;
-    padding-left: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+
+    box-shadow: 0 4px 8px rgba(0.5, 0.5, 0.5, 0.5);
     /* Leichter Schatten für Tiefe */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     /* Für sanfte Übergänge */
@@ -61,10 +62,11 @@ header {
 
 .pokemonCard img {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: 10px;
+    right: 10px;
     width: 100px;
-    height: auto;
+    height: 100px;
+    padding: 10px;
 }
 
 @keyframes spin {
@@ -136,8 +138,8 @@ header {
 
 #furtherInformation {
     position: relative;
-    background-color: grey;
     border-radius: 24px;
+    color: white;
     padding: 20px; /* Hinzugefügt für etwas Innenabstand */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Schatten für das Popup */
     z-index: 101; /* Höherer z-index als der des PopUp-Hintergrunds */
@@ -163,4 +165,9 @@ header {
 /* Stellen Sie sicher, dass der Körper scrollbar bleibt */
 body {
     overflow-y: auto;
+}
+
+.infoElementImg {
+    width: 150px;
+    height: 150px;
 }
