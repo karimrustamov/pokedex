@@ -140,15 +140,25 @@ function onCardClick(event) {
 
     // Setzen des Inhalts des Info-Elements mit dem Namen des Pokémons
     infoElement.innerHTML = `
-        <button onclick="closePopUp()" type="button" class="btn-close" aria-label="Close"></button>
-        <h1>${capitalizedTypeName}</h1>
-        <img class="infoElementImg" src="${pokemon['sprites']['other']['dream_world']['front_default']}">
-        <div>${typesContent}</div>
-        <div>#${pokemon.id}</div>
-        <div>Base Experience: ${pokemon.base_experience}</div>
-        <div>Abilities: ${abilitiesContent}</div>
-        <div>Height: ${pokemonHeight} m</div>
-        <div>Height: ${pokemonWeight} kg</div>
+        <button onclick="closePopUp()" type="button" class="btn-close" aria-label="Close" id="popUpCloseButton"></button>
+        <h1 id="popUpName">${capitalizedTypeName}</h1>
+        <img class="infoElementImg" id="popUpImg" src="${pokemon['sprites']['other']['dream_world']['front_default']}">
+        <div id="popUpType">${typesContent}</div>
+        <div id="popUpId">#${pokemon.id}</div>
+        <div id="popUpLowerPart">
+            <div id="popUpLowerPartTopics">
+                <div onclick="renderAbout()" id="About" class="fontUnderline">About</div>
+                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
+                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
+                <div onclick="renderMoves()" id="Moves" >Moves</div>
+            </div>
+            <div id="popUpLowerPartText">
+                <div class="nameWithValue"><div class="valueName">Base Experience: </div><div>${pokemon.base_experience}</div></div>
+                <div class="nameWithValue"><div class="valueName">Abilities: </div><div>${abilitiesContent}</div></div>
+                <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonHeight} m</div></div>
+                <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonWeight} kg</div></div>
+            </div>
+        </div>
     `;
 
     // Hier können Sie nun die gewünschten Informationen des Pokémon im Console-Log anzeigen
@@ -164,4 +174,53 @@ function closePopUp() {
     infoElement.classList.add("display-none");
     const infoElement2 = document.getElementById('popUp');
     infoElement2.classList.add("display-none");
+}
+
+function renderMoves(){
+    document.getElementById('popUpLowerPart').innerHTML =`
+    <div id="popUpLowerPartTopics">
+                <div onclick="renderAbout()" id="About">About</div>
+                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
+                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
+                <div onclick="renderMoves()" id="Moves" class="fontUnderline">Moves</div>
+            </div>
+    `;
+}
+function renderEvolution(){
+    document.getElementById('popUpLowerPart').innerHTML =`
+    <div id="popUpLowerPartTopics">
+                <div onclick="renderAbout()" id="About">About</div>
+                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
+                <div onclick="renderEvolution()" id="Evolution" class="fontUnderline" >Evolution</div>
+                <div onclick="renderMoves()" id="Moves" >Moves</div>
+            </div>
+    `;;
+}
+function renderBaseStats(){
+    document.getElementById('popUpLowerPart').innerHTML =`
+    <div id="popUpLowerPartTopics">
+                <div onclick="renderAbout()" id="About">About</div>
+                <div onclick="renderBaseStats()" id="Base Stats" class="fontUnderline" >Base Stats</div>
+                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
+                <div onclick="renderMoves()" id="Moves" >Moves</div>
+            </div>
+    `;;
+}
+function renderAbout(){
+    document.getElementById('popUpLowerPart').innerHTML =`
+    <div id="popUpLowerPart">
+            <div id="popUpLowerPartTopics">
+                <div onclick="renderAbout()" id="About" class="fontUnderline">About</div>
+                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
+                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
+                <div onclick="renderMoves()" id="Moves" >Moves</div>
+            </div>
+            <div id="popUpLowerPartText">
+                <div class="nameWithValue"><div class="valueName">Base Experience: </div><div>${pokemon.base_experience}</div></div>
+                <div class="nameWithValue"><div class="valueName">Abilities: </div><div>${abilitiesContent}</div></div>
+                <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonHeight} m</div></div>
+                <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonWeight} kg</div></div>
+            </div>
+        </div>
+    `;;
 }

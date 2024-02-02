@@ -58,6 +58,9 @@ header {
     border-radius: 10px;
     padding: 2px 8px;
     margin-bottom: 4px;
+    width: 80px;
+    height: auto;
+    text-align: center;
 }
 
 .pokemonCard img {
@@ -139,11 +142,18 @@ header {
 #furtherInformation {
     position: relative;
     border-radius: 24px;
+    width: 40vw;
+    height: 80vh;
     color: white;
     padding: 20px; /* Hinzugefügt für etwas Innenabstand */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Schatten für das Popup */
     z-index: 101; /* Höherer z-index als der des PopUp-Hintergrunds */
     /* Sie können hier die Größe anpassen, z. B. width: 50%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
 }
 
 #popUp {
@@ -170,4 +180,98 @@ body {
 .infoElementImg {
     width: 150px;
     height: 150px;
+    
+            
+}
+
+#popUpCloseButton {
+    position: absolute; /* Ändern Sie relative zu absolute */
+    top: 20px; /* Abstand von oben */
+    right: 20px; /* Abstand von rechts */
+    border: none; /* Optional: Entfernen des Standard-Borderrahmens */
+    background-color: transparent; /* Optional: Hintergrund transparent machen */
+    cursor: pointer; /* Cursor zu einem Klick-Zeiger ändern */
+    z-index: 102; /* Höher als das Popup selbst */
+}
+
+#popUpName{
+    position: absolute; /* Ändern Sie relative zu absolute */
+    top: 20px; /* Abstand von oben */
+    left: 20px; /* Abstand von rechts */
+}
+
+#popUpImg{
+    position: absolute; /* Ändern Sie relative zu absolute */
+    top: 150px;
+    width: 300px;
+    height: 300px;
+    z-index: 100;
+}
+
+#popUpType{
+    position: absolute; /* Ändern Sie relative zu absolute */
+    top: 80px;
+    left: 20px;
+    display: flex;
+    gap: 8px;
+}
+
+#popUpId {
+    position: absolute;
+    top: 120px;
+    left: 20px;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+#popUpLowerPart{
+    background-color: white;
+    color: black;
+    width: 100%;
+    height: 50%;
+    padding: 0;
+    position: absolute;
+    bottom: 0;
+    border-radius: 25px;
+    padding-top: 80px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+#popUpLowerPartText {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Ändern Sie center zu flex-start für linksbündige Ausrichtung */
+    width: 100%; /* Stellen Sie sicher, dass es die gesamte Breite nutzt */
+    padding: 20px; /* Fügen Sie etwas Innenabstand hinzu */
+}
+
+.nameWithValue {
+    display: flex;
+    justify-content: space-between; /* Sorgt dafür, dass die Kinder am rechten und linken Rand ausgerichtet sind */
+    width: 100%; /* Ermöglicht es dem Container, die volle Breite zu nutzen */
+    margin-bottom: 10px; /* Fügt Abstand zwischen den Zeilen hinzu für bessere Lesbarkeit */
+}
+
+.valueName {
+    text-align: left; /* Stellt sicher, dass der Text linksbündig ist */
+    color: grey;
+}
+
+#popUpLowerPartTopics{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+
+#popUpLowerPartTopics :hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.fontUnderline {
+    text-decoration: underline;
 }
