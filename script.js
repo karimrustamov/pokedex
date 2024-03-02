@@ -2,6 +2,7 @@ let currentPokemon; // Deklariert eine Variable 'currentPokemon', um das aktuell
 let pokemonID = 1; // Setzt die Anfangs-ID für Pokémon auf 1.
 const totalPokemon = 151; // Definiert die Gesamtanzahl der Pokémon, die geladen werden sollen, als Konstante (151).
 let allPokemons = {}; // Erstellt ein leeres Objekt 'allPokemons', um alle geladenen Pokémon zu speichern.
+let clickedPokemonID; //ID des aktuell angeklickten Pokemons
 
 
 
@@ -103,6 +104,8 @@ function onCardClick(event) {
     // Greifen Sie auf das entsprechende Pokémon-Objekt aus dem globalen Speicher zu
     const pokemon = allPokemons[pokemonId];
 
+    clickedPokemonID = pokemon;
+
     // Entfernen Sie die Klasse 'display-none', um das Element sichtbar zu machen
     const infoElement = document.getElementById('furtherInformation');
     infoElement.classList.remove("display-none");
@@ -176,16 +179,29 @@ function closePopUp() {
     infoElement2.classList.add("display-none");
 }
 
-function renderMoves(){
-    document.getElementById('popUpLowerPart').innerHTML =`
-    <div id="popUpLowerPartTopics">
-                <div onclick="renderAbout()" id="About">About</div>
-                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
-                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
-                <div onclick="renderMoves()" id="Moves" class="fontUnderline">Moves</div>
-            </div>
-    `;
+function renderMoves() {
+    const pokemon = clickedPokemonID; // Greift auf das aktuell ausgewählte Pokémon zu.
+    const moves = pokemon['moves']; // Greift auf die Moves des Pokémon zu.
+    let movesContent = '<div class="moves-container">'; // Beginn eines Containers für die Moves.
+
+    // Der erste Typ des Pokémon wird als Farbe für die Moves verwendet.
+    const moveColor = getColorByType(pokemon['types'][0]['type']['name']).light;
+
+    // Iteriert durch alle Moves des Pokémon und fügt sie dem movesContent String hinzu.
+    moves.forEach(move => {
+        let moveName = move['move']['name']; // Holt den Namen des aktuellen Moves.
+        moveName = moveName.charAt(0).toUpperCase() + moveName.slice(1); // Kapitalisiert den ersten Buchstaben des Move-Namens.
+        // Fügt den Move zum movesContent String hinzu, inklusive der Typfarbe.
+        movesContent += `<span class="move" style="background-color: ${moveColor};">${moveName}</span>`; 
+    });
+
+    movesContent += '</div>'; // Schließt den Container.
+
+    // Setzt den Inhalt des Elements mit der ID 'popUpLowerPartText' auf die gesammelten Moves.
+    document.getElementById('popUpLowerPartText').innerHTML = movesContent;
 }
+
+
 function renderEvolution(){
     document.getElementById('popUpLowerPart').innerHTML =`
     <div id="popUpLowerPartTopics">
@@ -197,6 +213,7 @@ function renderEvolution(){
     `;;
 }
 function renderBaseStats(){
+    const pokemon = clickedPokemonID;
     document.getElementById('popUpLowerPart').innerHTML =`
     <div id="popUpLowerPartTopics">
                 <div onclick="renderAbout()" id="About">About</div>
@@ -204,11 +221,46 @@ function renderBaseStats(){
                 <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
                 <div onclick="renderMoves()" id="Moves" >Moves</div>
             </div>
+            <div id="popUpLowerPartText">
+                <div class="nameWithValue"><div class="valueName">HP: </div><div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: ${pokemon['stats']['0']['base_stat']}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"> ${pokemon['stats']['0']['base_stat']}</div>
+              </div></div>
+                <div class="nameWithValue"><div class="valueName">Attack: </div><div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: ${pokemon['stats']['1']['base_stat']}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${pokemon['stats']['1']['base_stat']}</div>
+              </div></div>
+                <div class="nameWithValue"><div class="valueName">Defense: </div><div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: ${pokemon['stats']['2']['base_stat']}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${pokemon['stats']['2']['base_stat']}</div>
+              </div></div>
+                <div class="nameWithValue"><div class="valueName">Sp. Atk: </div><div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: ${pokemon['stats']['3']['base_stat']}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${pokemon['stats']['3']['base_stat']}</div>
+              </div></div>
+                <div class="nameWithValue"><div class="valueName">Sp. Def: </div><div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: ${pokemon['stats']['4']['base_stat']}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${pokemon['stats']['4']['base_stat']}</div>
+              </div></div>
+                <div class="nameWithValue"><div class="valueName">Speed: </div><div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: ${pokemon['stats']['5']['base_stat']}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">${pokemon['stats']['5']['base_stat']}</div>
+              </div></div>
+            </div>
     `;;
 }
 function renderAbout(){
+     // Greifen Sie auf das entsprechende Pokémon-Objekt aus dem globalen Speicher zu
+     const pokemon = clickedPokemonID;
+
+     // Erstellt ein Array aus den Namen der Abilities, wobei jeder Name kapitalisiert wird.
+    let abilities = pokemon['abilities'].map(ability => {
+        let abilityName = ability['ability']['name'];
+        return abilityName.charAt(0).toUpperCase() + abilityName.slice(1);
+    });
+
+    // Verbindet die Elemente des Arrays zu einem String, getrennt durch ", ".
+    abilitiesContent = abilities.join(', ');
+
+    let pokemonHeight = pokemon.height / 10;
+
+    let pokemonWeight = pokemon.weight / 10;
+ 
     document.getElementById('popUpLowerPart').innerHTML =`
-    <div id="popUpLowerPart">
             <div id="popUpLowerPartTopics">
                 <div onclick="renderAbout()" id="About" class="fontUnderline">About</div>
                 <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
@@ -221,6 +273,6 @@ function renderAbout(){
                 <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonHeight} m</div></div>
                 <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonWeight} kg</div></div>
             </div>
-        </div>
-    `;;
+    `;
 }
+

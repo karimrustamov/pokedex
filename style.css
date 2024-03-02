@@ -202,9 +202,9 @@ body {
 
 #popUpImg{
     position: absolute; /* Ändern Sie relative zu absolute */
-    top: 150px;
-    width: 300px;
-    height: 300px;
+    top: 15vh;
+    width: 30vw;
+    height: 30vh;
     z-index: 100;
 }
 
@@ -233,10 +233,11 @@ body {
     position: absolute;
     bottom: 0;
     border-radius: 25px;
-    padding-top: 80px;
+    padding-top: 40px;
     padding-left: 20px;
     padding-right: 20px;
-    font-size: 24px;
+    padding-bottom: 40px;
+    font-size: 20px;
     font-weight: 500;
 }
 
@@ -274,4 +275,62 @@ body {
 
 .fontUnderline {
     text-decoration: underline;
+}
+
+#popUpLowerPartText {
+    max-height: 100%; /* Oder eine andere Höhe, die zu Ihrem Design passt */
+    overflow-y: auto; /* Ermöglicht einen vertikalen Scrollbalken, wenn der Inhalt die maximale Höhe überschreitet */
+}
+
+/* Anpassen des Scrollbalkens insgesamt */
+::-webkit-scrollbar {
+    width: 8px; /* Breite des vertikalen Scrollbalkens */
+    height: 8px; /* Höhe des horizontalen Scrollbalkens */
+}
+
+/* Anpassen des Hintergrunds des Scrollbalkens (Track) */
+::-webkit-scrollbar-track {
+    background: transparent; /* Macht den Track transparent */
+}
+
+/* Anpassen des eigentlichen Scrollbalken-Handles (Thumb) */
+::-webkit-scrollbar-thumb {
+    background: black; /* Schwarze Farbe des Handles */
+    border-radius: 4px; /* Abgerundete Ecken für den Thumb */
+}
+
+/* Anpassen des Handles beim Hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Etwas helleres Schwarz für den Hover-Zustand */
+}
+
+.progress{
+    width: 25vw;
+}
+
+.progress-bar {
+    background-color:#FA5252!important;
+}
+
+.moves-container {
+    display: flex; /* Flexbox-Layout für die Moves */
+    flex-wrap: wrap; /* Erlaubt das Umfließen der Moves */
+    justify-content: space-between; /* Zentriert die Moves horizontal */
+    align-items: center; /* Zentriert die Moves vertikal */
+    padding: 10px; /* Abstand innerhalb des Containers */
+}
+
+.move {
+    margin: 5px; /* Abstand zwischen den Moves */
+    padding: 8px 16px; /* Innenabstand der Moves */
+    font-size: 14px; /* Schriftgröße der Moves */
+    border-radius: 20px; /* Abgerundete Ecken */
+    color: white; /* Textfarbe */
+    text-transform: capitalize; /* Großbuchstaben am Anfang jedes Wortes */
+    cursor: pointer; /* Cursor-Stil beim Hover */
+    transition: transform 0.3s; /* Animation beim Hover */
+}
+
+.move:hover {
+    transform: scale(1.1); /* Vergrößert den Move beim Hover */
 }
