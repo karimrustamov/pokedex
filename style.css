@@ -337,3 +337,44 @@ body {
 .move:hover {
     transform: scale(1.1); /* Vergrößert den Move beim Hover */
 }
+
+@media (max-width: 1200px) {
+    #furtherInformation {
+        width: 60vw;
+    }
+}
+
+@media (max-width: 550px) {
+    #furtherInformation {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+    }
+    #popUpLowerPart{
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 672px) {
+    #logoPokedex{
+        display: none;
+    }
+    header {
+        flex-direction: column;
+    }
+    #searchInput{
+        text-align: center;
+    }
+}
+
+.headerSections{
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#headerMiddle{
+    display: flex;
+    flex-direction: column;
+}

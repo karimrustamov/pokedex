@@ -1,74 +1,90 @@
-let currentPokemon; // Deklariert eine Variable 'currentPokemon', um das aktuell verarbeitete Pokémon zu speichern.
-let pokemonID = 1; // Setzt die Anfangs-ID für Pokémon auf 1.
-const totalPokemon = 151; // Definiert die Gesamtanzahl der Pokémon, die geladen werden sollen, als Konstante (151).
-let allPokemons = {}; // Erstellt ein leeres Objekt 'allPokemons', um alle geladenen Pokémon zu speichern.
-let clickedPokemonID; //ID des aktuell angeklickten Pokemons
-
-
+let currentPokemon; // Declares a variable 'currentPokemon' to store the currently processed Pokémon.
+let pokemonID = 1; // Sets the initial ID for Pokémon to 1.
+const totalPokemon = 151; // Defines the total number of Pokémon to be loaded as a constant (151).
+let allPokemons = {}; // Creates an empty object 'allPokemons' to store all loaded Pokémon.
+let clickedPokemonID; // ID of the currently clicked Pokémon
 
 async function init() {
     for (pokemonID = 1; pokemonID <= totalPokemon; pokemonID++) {
-        await loadPokemon(); // Iteriert über Pokémon-IDs und lädt jedes Pokémon einzeln.
+        await loadPokemon(); // Iterates over Pokémon IDs and loads each Pokémon individually.
     }
-    stopLoadingAnimation(); // Stoppt die Ladeanimation, sobald alle Pokémon geladen wurden.
+    stopLoadingAnimation(); // Stops the loading animation once all Pokémon have been loaded.
 }
 
 
 async function loadPokemon() {
     try {
-        let url = 'https://pokeapi.co/api/v2/pokemon/' + pokemonID; // Erstellt die URL für die Pokémon-API.
-        let response = await fetch(url); // Sendet eine asynchrone Anfrage an die Pokémon-API.
-        let pokemonData = await response.json(); // Wandelt die Antwort der API in ein JavaScript-Objekt um.
+        let url = 'https://pokeapi.co/api/v2/pokemon/' + pokemonID; // Constructs the URL for the Pokémon API.
+        let response = await fetch(url); // Sends an asynchronous request to the Pokémon API.
+        let pokemonData = await response.json(); // Converts the API response into a JavaScript object.
 
-        allPokemons[pokemonData.id] = pokemonData; // Speichert das Pokémon im 'allPokemons'-Objekt.
+        allPokemons[pokemonData.id] = pokemonData; // Stores the Pokémon in the 'allPokemons' object.
 
-        currentPokemon = pokemonData; // Setzt das aktuelle Pokémon für weitere Verarbeitung.
-        renderPokemonInfo(); // Ruft die Funktion auf, um Informationen über das Pokémon zu rendern.
+        currentPokemon = pokemonData; // Sets the current Pokémon for further processing.
+        renderPokemonInfo(); // Calls the function to render information about the Pokémon.
     } catch (error) {
-        console.error('Error loading Pokemon:', error); // Zeigt einen Fehler in der Konsole an, falls das Laden fehlschlägt.
+        console.error('Error loading Pokemon:', error); // Displays an error in the console if loading fails.
     }
 }
 
-
-
 function stopLoadingAnimation() {
-    const loadingPokeball = document.getElementById('loadingPokeball'); // Zugriff auf das Ladeanimationselement.
-    loadingPokeball.classList.add('finish'); // Fügt der Klasse des Elements 'finish' hinzu, um die Animation zu stoppen.
+    const loadingPokeball = document.getElementById('loadingPokeball'); // Accesses the loading animation element.
+    loadingPokeball.classList.add('finish'); // Adds the 'finish' class to the element to stop the animation.
+}
+
+function createPokemonCard() {
+    // Creates a new div element to represent a Pokémon card.
+    let card = document.createElement('div');
+    card.className = 'pokemonCard'; // Sets the class name for styling purposes.
+    card.setAttribute('data-pokemon-id', currentPokemon.id); // Sets the 'data-pokemon-id' attribute to store the Pokémon's ID.
+    card.addEventListener('click', onCardClick); // Adds a click event listener to the card.
+    return card; // Returns the created card element.
 }
 
 
-function renderPokemonInfo() {
-    let card = document.createElement('div'); // Erstellt ein neues 'div'-Element für die Pokémon-Karte.
-    card.className = 'pokemonCard'; // Weist der Karte eine Klasse zu.
-    card.setAttribute('data-pokemon-id', currentPokemon.id); // Setzt die Pokémon-ID als Datenattribut der Karte.
-    card.addEventListener('click', onCardClick); // Fügt einen Klick-Event-Listener hinzu, um auf Klicks zu reagieren.
+function formatPokemonName(name) {
+    // Capitalizes the first letter of the Pokémon's name and returns it.
+    return name.charAt(0).toUpperCase() + name.slice(1);
+}
 
-    // Erstellt und formatiert den Namen des Pokémon.
-    let name = currentPokemon['name'];
-    let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+function setBackgroundColorForCard(card, pokemonType) {
+    // Sets the background color of the card based on the Pokémon's primary type.
+    let firstTypeColor = getColorByType(pokemonType['types'][0]['type']['name']);
+    card.style.backgroundColor = firstTypeColor.light;
+}
 
-    let typesContent = ''; // Initialisiert einen leeren String für Pokémon-Typen.
-    let firstTypeColor = getColorByType(currentPokemon['types'][0]['type']['name']); // Holt die Farbe des ersten Typs.
-    card.style.backgroundColor = firstTypeColor.light; // Setzt die Hintergrundfarbe der Karte basierend auf dem Pokémon-Typ.
-
-    // Iteriert über die Typen des Pokémon und erstellt HTML-Elemente dafür.
-    currentPokemon['types'].forEach(type => {
+function createTypesContent(types) {
+    let typesContent = '';
+    // Generates HTML content for displaying the Pokémon's types with proper capitalization and styling.
+    types.forEach(type => {
         let typeName = type['type']['name'];
         let capitalizedTypeName = typeName.charAt(0).toUpperCase() + typeName.slice(1);
         let typeDiv = `<div class="pokemonType" style="background-color: ${getColorByType(typeName).dark}">${capitalizedTypeName}</div>`;
         typesContent += typeDiv;
     });
+    return typesContent;
+}
 
-    // Setzt das innere HTML der Karte mit Pokémon-Informationen.
+function appendCardToDocument(card) {
+    // Appends the generated Pokémon card to the document.
+    document.getElementById('allCards').appendChild(card);
+}
+
+function renderPokemonInfo() {
+    // Renders information about the current Pokémon onto a card.
+    let card = createPokemonCard(); // Creates a new Pokémon card element.
+    let capitalizedName = formatPokemonName(currentPokemon['name']); // Formats the Pokémon's name.
+    setBackgroundColorForCard(card, currentPokemon); // Sets the background color of the card.
+    let typesContent = createTypesContent(currentPokemon['types']); // Generates content for the Pokémon's types.
+
+    // Sets the inner HTML of the card with the Pokémon's information.
     card.innerHTML = `
         <h2>${capitalizedName}</h2>
         <div>#${currentPokemon['id']}</div>
         <img src="${currentPokemon['sprites']['other']['dream_world']['front_default']}" alt="${capitalizedName}">
         <div class="allTypes">${typesContent}</div>
     `;
-
-    // Fügt die Karte dem Dokument hinzu.
-    document.getElementById('allCards').appendChild(card);
+    appendCardToDocument(card); // Appends the card to the document.
 }
 
 
@@ -98,79 +114,104 @@ function getColorByType(type) { // Definiert ein Objekt mit Farben für jeden Po
 }
 
 function onCardClick(event) {
-    // Holen Sie die Pokémon-ID aus dem Datenattribut des angeklickten Elements
+    // Retrieves the ID of the clicked Pokémon from the data attribute of the clicked card.
     const pokemonId = event.currentTarget.getAttribute('data-pokemon-id');
+    // Retrieves the Pokémon object corresponding to the clicked ID.
+    const pokemon = getPokemonById(pokemonId);
+    // Sets the clicked Pokémon as the currently selected Pokémon.
+    setClickedPokemon(pokemon);
+    // Shows the information element to display details about the clicked Pokémon.
+    showInfoElement();
 
-    // Greifen Sie auf das entsprechende Pokémon-Objekt aus dem globalen Speicher zu
-    const pokemon = allPokemons[pokemonId];
+    // Capitalizes the name of the clicked Pokémon.
+    const capitalizedPokemonName = capitalizeString(pokemon.name);
+    // Retrieves the color corresponding to the primary type of the clicked Pokémon.
+    const firstTypeColor = getColorByType(pokemon.types[0].type.name);
+    // Sets the background color of the information element based on the primary type color.
+    setInfoElementBackground(firstTypeColor.light);
 
+    // Generates HTML content for displaying the types of the clicked Pokémon.
+    const typesContent = createTypesContent(pokemon.types);
+    // Generates HTML content for displaying the abilities of the clicked Pokémon.
+    const abilitiesContent = createAbilitiesContent(pokemon.abilities);
+
+    // Converts the height and weight of the clicked Pokémon to proper units for display.
+    const pokemonHeight = pokemon.height / 10; // Height in meters
+    const pokemonWeight = pokemon.weight / 10; // Weight in kilograms
+
+    // Renders detailed information about the clicked Pokémon.
+    renderInfoElement(capitalizedPokemonName, pokemon, typesContent, abilitiesContent, pokemonHeight, pokemonWeight);
+}
+
+
+function getPokemonById(id) {
+    // Retrieves a Pokémon from the 'allPokemons' object based on its ID.
+    return allPokemons[id];
+}
+
+function setClickedPokemon(pokemon) {
+    // Sets the clicked Pokémon as the currently selected Pokémon.
     clickedPokemonID = pokemon;
+}
 
-    // Entfernen Sie die Klasse 'display-none', um das Element sichtbar zu machen
+function showInfoElement() {
+    // Displays the information element by removing the 'display-none' class from its class list.
+    document.getElementById('furtherInformation').classList.remove('display-none');
+    // Displays the pop-up element by removing the 'display-none' class from its class list.
+    document.getElementById('popUp').classList.remove('display-none');
+}
+
+function capitalizeString(string) {
+    // Capitalizes the first letter of a given string.
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function setInfoElementBackground(color) {
+    // Sets the background color of the information element.
+    document.getElementById('furtherInformation').style.backgroundColor = color;
+}
+
+function createTypesContent(types) {
+    // Generates HTML content for displaying the types of a Pokémon with proper capitalization and styling.
+    return types.map(type => {
+        const capitalizedTypeName = capitalizeString(type.type.name);
+        // Constructs a div element for each type with its corresponding background color.
+        return `<div class="pokemonType" style="background-color: ${getColorByType(type.type.name).dark}">${capitalizedTypeName}</div>`;
+    }).join('');
+}
+
+function createAbilitiesContent(abilities) {
+    // Generates HTML content for displaying the abilities of a Pokémon with proper capitalization and formatting.
+    return abilities.map(ability => capitalizeString(ability.ability.name)).join(', ');
+}
+
+function renderInfoElement(name, pokemon, typesContent, abilitiesContent, height, weight) {
+    // Renders detailed information about a Pokémon in the information element.
     const infoElement = document.getElementById('furtherInformation');
-    infoElement.classList.remove("display-none");
-    const infoElement2 = document.getElementById('popUp');
-    infoElement2.classList.remove("display-none");
-
-    //Macht beim PopUp den Pokemonnamen großgeschrieben
-    let capitalizedTypeName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-
-    let typesContent = ''; // Initialisiert einen leeren String für Pokémon-Typen.
-    let firstTypeColor = getColorByType(pokemon['types'][0]['type']['name']); // Holt die Farbe des ersten Typs.
-    furtherInformation.style.backgroundColor = firstTypeColor.light; // Setzt die Hintergrundfarbe der Karte basierend auf dem Pokémon-Typ.
-    let abilitiesContent = '';
-
-    // Iteriert über die Typen des Pokémon und erstellt HTML-Elemente dafür.
-    pokemon['types'].forEach(type => {
-        let typeName = type['type']['name'];
-        let capitalizedTypeName = typeName.charAt(0).toUpperCase() + typeName.slice(1);
-        let typeDiv = `<div class="pokemonType" style="background-color: ${getColorByType(typeName).dark}">${capitalizedTypeName}</div>`;
-        typesContent += typeDiv;
-    });
-
-    // Erstellt ein Array aus den Namen der Abilities, wobei jeder Name kapitalisiert wird.
-    let abilities = pokemon['abilities'].map(ability => {
-        let abilityName = ability['ability']['name'];
-        return abilityName.charAt(0).toUpperCase() + abilityName.slice(1);
-    });
-
-    // Verbindet die Elemente des Arrays zu einem String, getrennt durch ", ".
-    abilitiesContent = abilities.join(', ');
-
-    let pokemonHeight = pokemon.height / 10;
-
-    let pokemonWeight = pokemon.weight / 10;
-
-    // Setzen des Inhalts des Info-Elements mit dem Namen des Pokémons
     infoElement.innerHTML = `
         <button onclick="closePopUp()" type="button" class="btn-close" aria-label="Close" id="popUpCloseButton"></button>
-        <h1 id="popUpName">${capitalizedTypeName}</h1>
-        <img class="infoElementImg" id="popUpImg" src="${pokemon['sprites']['other']['dream_world']['front_default']}">
+        <h1 id="popUpName">${name}</h1>
+        <img class="infoElementImg" id="popUpImg" src="${pokemon.sprites.other.dream_world.front_default}">
         <div id="popUpType">${typesContent}</div>
         <div id="popUpId">#${pokemon.id}</div>
         <div id="popUpLowerPart">
             <div id="popUpLowerPartTopics">
                 <div onclick="renderAbout()" id="About" class="fontUnderline">About</div>
-                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
-                <div onclick="renderMoves()" id="Moves" >Moves</div>
+                <div onclick="renderBaseStats()" id="Base Stats">Base Stats</div>
+                <div onclick="renderMoves()" id="Moves">Moves</div>
             </div>
             <div id="popUpLowerPartText">
                 <div class="nameWithValue"><div class="valueName">Base Experience: </div><div>${pokemon.base_experience}</div></div>
                 <div class="nameWithValue"><div class="valueName">Abilities: </div><div>${abilitiesContent}</div></div>
-                <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonHeight} m</div></div>
-                <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonWeight} kg</div></div>
+                <div class="nameWithValue"><div class="valueName">Height: </div><div>${height} m</div></div>
+                <div class="nameWithValue"><div class="valueName">Weight: </div><div>${weight} kg</div></div>
             </div>
         </div>
     `;
-
-    // Hier können Sie nun die gewünschten Informationen des Pokémon im Console-Log anzeigen
-    console.log('Geklicktes Pokémon:', currentPokemon);
-
-    // Zeigt das Popup an
-    const popupElement = document.querySelector('.popUp');
-    //popupElement.classList.add('popUpActive');
 }
 
+
+// Close the pop-up when called.
 function closePopUp() {
     const infoElement = document.getElementById('furtherInformation');
     infoElement.classList.add("display-none");
@@ -178,39 +219,39 @@ function closePopUp() {
     infoElement2.classList.add("display-none");
 }
 
+// Render moves for the selected Pokémon.
 function renderMoves() {
-    const pokemon = clickedPokemonID; // Greift auf das aktuell ausgewählte Pokémon zu.
-    const moves = pokemon['moves']; // Greift auf die Moves des Pokémon zu.
-    let movesContent = '<div class="moves-container">'; // Beginn eines Containers für die Moves.
+    const pokemon = clickedPokemonID; // Access the currently selected Pokémon.
+    const moves = pokemon['moves']; // Access the moves of the Pokémon.
+    let movesContent = '<div class="moves-container">'; // Start a container for the moves.
 
-    // Der erste Typ des Pokémon wird als Farbe für die Moves verwendet.
+    // Use the first type of the Pokémon as the color for the moves.
     const moveColor = getColorByType(pokemon['types'][0]['type']['name']).light;
 
-    // Iteriert durch alle Moves des Pokémon und fügt sie dem movesContent String hinzu.
+    // Iterate through all moves of the Pokémon and add them to the movesContent string.
     moves.forEach(move => {
-        let moveName = move['move']['name']; // Holt den Namen des aktuellen Moves.
-        moveName = moveName.charAt(0).toUpperCase() + moveName.slice(1); // Kapitalisiert den ersten Buchstaben des Move-Namens.
-        // Fügt den Move zum movesContent String hinzu, inklusive der Typfarbe.
+        let moveName = move['move']['name']; // Get the name of the current move.
+        moveName = moveName.charAt(0).toUpperCase() + moveName.slice(1); // Capitalize the first letter of the move name.
+        // Add the move to the movesContent string, including the type color.
         movesContent += `<span class="move" style="background-color: ${moveColor};">${moveName}</span>`;
     });
 
-    movesContent += '</div>'; // Schließt den Container.
+    movesContent += '</div>'; // Close the container.
 
+    // Update the lower part of the pop-up with the movesContent.
     document.getElementById('popUpLowerPart').innerHTML = `
     <div id="popUpLowerPartTopics">
-        <div onclick="renderAbout()" id="About" >About</div>
-        <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
+        <div onclick="renderAbout()" id="About">About</div>
+        <div onclick="renderBaseStats()" id="Base Stats">Base Stats</div>
         <div onclick="renderMoves()" id="Moves" class="fontUnderline">Moves</div>
     </div>
     <div id="popUpLowerPartText">
         ${movesContent}
     </div>
-`
+`;
 }
 
-
-
-function renderBaseStats() {
+function renderBaseStats() { // Render base stats for the selected Pokémon.
     const pokemon = clickedPokemonID;
     document.getElementById('popUpLowerPart').innerHTML = `
     <div id="popUpLowerPartTopics">
@@ -240,18 +281,20 @@ function renderBaseStats() {
             </div>
     `;;
 }
+
+// Render information about the selected Pokémon.
 function renderAbout() {
-    // Greifen Sie auf das entsprechende Pokémon-Objekt aus dem globalen Speicher zu
+    // Access the corresponding Pokémon object from the global storage.
     const pokemon = clickedPokemonID;
 
-    // Erstellt ein Array aus den Namen der Abilities, wobei jeder Name kapitalisiert wird.
+    // Create an array of ability names, capitalizing each name.
     let abilities = pokemon['abilities'].map(ability => {
         let abilityName = ability['ability']['name'];
         return abilityName.charAt(0).toUpperCase() + abilityName.slice(1);
     });
 
-    // Verbindet die Elemente des Arrays zu einem String, getrennt durch ", ".
-    abilitiesContent = abilities.join(', ');
+    // Join the elements of the array into a string, separated by ", ".
+    let abilitiesContent = abilities.join(', ');
 
     let pokemonHeight = pokemon.height / 10;
 
@@ -260,20 +303,22 @@ function renderAbout() {
     document.getElementById('popUpLowerPart').innerHTML = `
             <div id="popUpLowerPartTopics">
                 <div onclick="renderAbout()" id="About" class="fontUnderline">About</div>
-                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
-                <div onclick="renderMoves()" id="Moves" >Moves</div>
+                <div onclick="renderBaseStats()" id="Base Stats">Base Stats</div>
+                <div onclick="renderMoves()" id="Moves">Moves</div>
             </div>
             <div id="popUpLowerPartText">
                 <div class="nameWithValue"><div class="valueName">Base Experience: </div><div>${pokemon.base_experience}</div></div>
                 <div class="nameWithValue"><div class="valueName">Abilities: </div><div>${abilitiesContent}</div></div>
                 <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonHeight} m</div></div>
-                <div class="nameWithValue"><div class="valueName">Height: </div><div>${pokemonWeight} kg</div></div>
+                <div class="nameWithValue"><div class="valueName">Weight: </div><div>${pokemonWeight} kg</div></div>
             </div>
     `;
 }
 
+// Add event listener to search input for filtering Pokémon on the fly.
 document.getElementById('searchInput').addEventListener('input', filterPokemonsOnFly);
 
+// Function to filter Pokémon cards based on search input.
 function filterPokemonsOnFly() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const cardsContainer = document.getElementById('allCards');
@@ -283,9 +328,12 @@ function filterPokemonsOnFly() {
         let card = cards[i];
         let pokemonName = card.querySelector('h2').textContent.toLowerCase();
         if (pokemonName.includes(searchTerm)) {
-            card.style.display = ""; // Karte anzeigen
+            card.style.display = ""; // Show card
         } else {
-            card.style.display = "none"; // Karte verstecken
+            card.style.display = "none"; // Hide card
         }
     }
 }
+
+init(); // Start loading Pokémon once the page is loaded.
+
