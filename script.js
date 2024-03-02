@@ -152,7 +152,6 @@ function onCardClick(event) {
             <div id="popUpLowerPartTopics">
                 <div onclick="renderAbout()" id="About" class="fontUnderline">About</div>
                 <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
-                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
                 <div onclick="renderMoves()" id="Moves" >Moves</div>
             </div>
             <div id="popUpLowerPartText">
@@ -192,33 +191,31 @@ function renderMoves() {
         let moveName = move['move']['name']; // Holt den Namen des aktuellen Moves.
         moveName = moveName.charAt(0).toUpperCase() + moveName.slice(1); // Kapitalisiert den ersten Buchstaben des Move-Namens.
         // Fügt den Move zum movesContent String hinzu, inklusive der Typfarbe.
-        movesContent += `<span class="move" style="background-color: ${moveColor};">${moveName}</span>`; 
+        movesContent += `<span class="move" style="background-color: ${moveColor};">${moveName}</span>`;
     });
 
     movesContent += '</div>'; // Schließt den Container.
 
-    // Setzt den Inhalt des Elements mit der ID 'popUpLowerPartText' auf die gesammelten Moves.
-    document.getElementById('popUpLowerPartText').innerHTML = movesContent;
-}
-
-
-function renderEvolution(){
-    document.getElementById('popUpLowerPart').innerHTML =`
+    document.getElementById('popUpLowerPart').innerHTML = `
     <div id="popUpLowerPartTopics">
-                <div onclick="renderAbout()" id="About">About</div>
-                <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
-                <div onclick="renderEvolution()" id="Evolution" class="fontUnderline" >Evolution</div>
-                <div onclick="renderMoves()" id="Moves" >Moves</div>
-            </div>
-    `;;
+        <div onclick="renderAbout()" id="About" >About</div>
+        <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
+        <div onclick="renderMoves()" id="Moves" class="fontUnderline">Moves</div>
+    </div>
+    <div id="popUpLowerPartText">
+        ${movesContent}
+    </div>
+`
 }
-function renderBaseStats(){
+
+
+
+function renderBaseStats() {
     const pokemon = clickedPokemonID;
-    document.getElementById('popUpLowerPart').innerHTML =`
+    document.getElementById('popUpLowerPart').innerHTML = `
     <div id="popUpLowerPartTopics">
                 <div onclick="renderAbout()" id="About">About</div>
                 <div onclick="renderBaseStats()" id="Base Stats" class="fontUnderline" >Base Stats</div>
-                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
                 <div onclick="renderMoves()" id="Moves" >Moves</div>
             </div>
             <div id="popUpLowerPartText">
@@ -243,11 +240,11 @@ function renderBaseStats(){
             </div>
     `;;
 }
-function renderAbout(){
-     // Greifen Sie auf das entsprechende Pokémon-Objekt aus dem globalen Speicher zu
-     const pokemon = clickedPokemonID;
+function renderAbout() {
+    // Greifen Sie auf das entsprechende Pokémon-Objekt aus dem globalen Speicher zu
+    const pokemon = clickedPokemonID;
 
-     // Erstellt ein Array aus den Namen der Abilities, wobei jeder Name kapitalisiert wird.
+    // Erstellt ein Array aus den Namen der Abilities, wobei jeder Name kapitalisiert wird.
     let abilities = pokemon['abilities'].map(ability => {
         let abilityName = ability['ability']['name'];
         return abilityName.charAt(0).toUpperCase() + abilityName.slice(1);
@@ -259,12 +256,11 @@ function renderAbout(){
     let pokemonHeight = pokemon.height / 10;
 
     let pokemonWeight = pokemon.weight / 10;
- 
-    document.getElementById('popUpLowerPart').innerHTML =`
+
+    document.getElementById('popUpLowerPart').innerHTML = `
             <div id="popUpLowerPartTopics">
                 <div onclick="renderAbout()" id="About" class="fontUnderline">About</div>
                 <div onclick="renderBaseStats()" id="Base Stats" >Base Stats</div>
-                <div onclick="renderEvolution()" id="Evolution" >Evolution</div>
                 <div onclick="renderMoves()" id="Moves" >Moves</div>
             </div>
             <div id="popUpLowerPartText">
@@ -276,3 +272,20 @@ function renderAbout(){
     `;
 }
 
+document.getElementById('searchInput').addEventListener('input', filterPokemonsOnFly);
+
+function filterPokemonsOnFly() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const cardsContainer = document.getElementById('allCards');
+    const cards = cardsContainer.getElementsByClassName('pokemonCard');
+
+    for (let i = 0; i < cards.length; i++) {
+        let card = cards[i];
+        let pokemonName = card.querySelector('h2').textContent.toLowerCase();
+        if (pokemonName.includes(searchTerm)) {
+            card.style.display = ""; // Karte anzeigen
+        } else {
+            card.style.display = "none"; // Karte verstecken
+        }
+    }
+}
